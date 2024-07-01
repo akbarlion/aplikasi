@@ -1,0 +1,135 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<div class="col-12">
+    <div class="card">
+        <p-toolbar styleClass="mb-4 gap-2">
+            <ng-template pTemplate="left">
+                <p-button pRipple severity="success" label="New" icon="pi pi-plus" class="mr-2"
+                    (click)="tambahMahasiswa()" />
+                <p-button pRipple severity="danger" label="Delete" icon="pi pi-trash" (click)="confirmDeleteBorongan()"
+                    [disabled]="!selectedMahasiswa || !selectedMahasiswa.length" />
+            </ng-template>
+        </p-toolbar>
+        <div class="col-12" *ngIf="loadingMahasiswa">
+            <p-progressBar mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
+        </div>
+        <p-table #dt [value]="mahasiswa" [rows]="10" [paginator]="true"
+            [globalFilterFields]="['NAMA_MAHASISWA', 'NIM', 'PRODI', 'FAKULTAS']"
+            [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedMahasiswa" [rowHover]="true" dataKey="ID"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true">
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center justify-content-between">
+                    <h5 class="m-0">Manage Mahasiswa</h5>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Search..." />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem">
+                        <p-tableHeaderCheckbox />
+                    </th>
+                    <th pSortableColumn="NIM" style="width: 20%;">
+                        NIM <p-sortIcon field="NIM" />
+                    </th>
+                    <th pSortableColumn="NAMA_MAHASISWA" style="width:20%">
+                        Nama Mahasiswa <p-sortIcon field="NAMA_MAHASISWA" />
+                    </th>
+                    <th pSortableColumn="PRODI" style="width:20%">
+                        Prodi <p-sortIcon field="PRODI" />
+                    </th>
+                    <th pSortableColumn="FAKULTAS" style="width:20%">
+                        Fakultas <p-sortIcon field="FAKULTAS" />
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-mahasiswa>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="mahasiswa" />
+                    </td>
+                    <td>{{mahasiswa.NIM}}</td>
+                    <td>{{mahasiswa.NAMA_MAHASISWA}}</td>
+                    <td>{{mahasiswa.PRODI}}</td>
+                    <td>{{mahasiswa.FAKULTAS}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-pencil"
+                            class="mr-2 p-button-rounded p-button-warn p-button-outlined"
+                            (click)="editMahasiswa(mahasiswa)"></button>
+                        <button pButton pRipple icon="pi pi-trash"
+                            class="ml-2 p-button-rounded p-button-danger p-button-outlined"
+                            (click)="confirmDelete(mahasiswa)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+
+<p-dialog header="Edit Mahasiswa" [modal]="true" [(visible)]="editDialog" [style]="{ width: '450px' }"
+    [draggable]="false" [resizable]="false" [closable]="false" [maximizable]="true">
+    <ng-template pTemplate="content">
+        <div class="p-fluid">
+            <label for="namaMahasiswa">
+                <p>Nama Mahasiswa</p>
+            </label>
+            <input pInputText type="text" id="namaMahasiswa" [(ngModel)]="selectEditing.NAMA_MAHASISWA" />
+        </div>
+        <div class="p-fluid mt-2">
+            <label for="NIM">
+                <p>NIM</p>
+            </label>
+            <input pInputText type="text" id="NIM" [(ngModel)]="selectEditing.NIM" [disabled]="true" />
+        </div>
+        <div class="p-fluid mt-2">
+            <label for="Prodi">
+                <p>Prodi</p>
+            </label>
+            <p-dropdown [options]="prodi" optionLabel="PROGRAM_STUDI" appendTo="body" [(ngModel)]="selectEditing.PRODI"
+                placeholder="-- Pilih Prodi Baru ---"></p-dropdown>
+        </div>
+        <div class="p-fluid mt-2">
+            <label for="Fakultas">
+                <p>Fakultas</p>
+            </label>
+            <p-dropdown [options]="fakultas" optionLabel="FAKULTAS_NAME" [(ngModel)]="selectEditing.FAKULTAS"
+                appendTo="body" placeholder="-- Pilih Fakultas Baru ---"></p-dropdown>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+            (click)="hideDialog(selectEditing)"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+            (click)="savEdit(selectEditing)"></button>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog [(visible)]="addDialog" [style]="{ width: '450px' }" header="Tambah Mahasiswa" [modal]="true"
+    styleClass="p-fluid" [draggable]="false">
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="namaMahasiswa">Nama Mahasiswa</label>
+            <input type="text" pInputText id="namaMahasiswa" [(ngModel)]="namaMahasiswa_new" />
+        </div>
+        <div class="field">
+            <label for="NIM">NIM</label>
+            <input type="text" pInputText id="NIM" [(ngModel)]="nim_new" />
+        </div>
+        <div class="field">
+            <label for="Prodi">Prodi</label>
+            <p-dropdown [options]="prodi" optionLabel="PROGRAM_STUDI" [(ngModel)]="prodi_new"
+                appendTo="body"></p-dropdown>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveNew()"></button>
+    </ng-template>
+</p-dialog>

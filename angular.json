@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/sakai-ng",
+                        "outputPath": "www",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": [
@@ -101,5 +101,8 @@
                 }
             }
         }
+    },
+    "cli": {
+        "analytics": "034bdea2-8140-4130-9af7-7b8cf305423b"
     }
 }

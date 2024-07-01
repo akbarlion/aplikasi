@@ -7,6 +7,13 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageService } from 'primeng/api';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RippleModule } from 'primeng/ripple';
+
 
 @NgModule({
     imports: [
@@ -16,7 +23,10 @@ import { InputTextModule } from 'primeng/inputtext';
         CheckboxModule,
         InputTextModule,
         FormsModule,
-        PasswordModule
+        PasswordModule,
+        MessageModule,
+        ToastModule,
+        RippleModule,
     ],
     declarations: [LoginComponent]
 })

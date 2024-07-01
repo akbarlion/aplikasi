@@ -17,4 +17,6 @@ export class AppTopBarComponent {
     @ViewChild('topbarmenu') menu!: ElementRef;
 
     constructor(public layoutService: LayoutService) { }
+
+    name: any = JSON.parse(localStorage.getItem('account'))
 }
